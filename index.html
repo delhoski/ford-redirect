@@ -4,34 +4,34 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Ford Form Yönlendirme</title>
-    <script>
-        function autoFillAndRedirect() {
-            // Ford formunun olduğu sayfa
-            let formUrl = "https://www.ford.com.tr/bilgi-alin-formu-yeni/cetas-izmir";
-            let newWindow = window.open(formUrl, "_self"); // Aynı sayfada aç
-
-            // 3 saniye bekleyerek form yüklenmesini sağla, sonra seçimleri yap
-            setTimeout(() => {
-                let selects = [
-                    { selector: 'select[name="musteri_tipi"]', value: 'Bireysel' },
-                    { selector: 'select[name="kategori"]', value: 'Elektrik&Hibrit' },
-                    { selector: 'select[name="altkategori"]', value: 'Mustang Mach-E' },
-                    { selector: 'select[name="il"]', value: 'İzmir' },
-                    { selector: 'select[name="bayi"]', value: 'ÇETAŞ İZMİR' }
-                ];
-
-                selects.forEach(item => {
-                    let dropdown = document.querySelector(item.selector);
-                    if (dropdown) {
-                        dropdown.value = item.value;
-                        dropdown.dispatchEvent(new Event('change'));
-                    }
-                });
-            }, 3000);
-        }
-    </script>
 </head>
-<body onload="autoFillAndRedirect()">
-    <h2>Ford Formuna Yönlendiriliyorsunuz...</h2>
+<body>
+    <h2>Ford Formu Yükleniyor...</h2>
+    
+    <!-- Ford formunu iframe içinde aç -->
+    <iframe id="fordForm" src="https://www.ford.com.tr/bilgi-alin-formu-yeni/cetas-izmir" width="100%" height="800px"></iframe>
+
+    <script>
+        // 3 saniye sonra formu otomatik doldurmaya çalış
+        setTimeout(() => {
+            let iframe = document.getElementById("fordForm").contentWindow.document;
+
+            let selections = [
+                { selector: 'select[name="musteri_tipi"]', value: 'Bireysel' },
+                { selector: 'select[name="kategori"]', value: 'Elektrik&Hibrit' },
+                { selector: 'select[name="altkategori"]', value: 'Mustang Mach-E' },
+                { selector: 'select[name="il"]', value: 'İzmir' },
+                { selector: 'select[name="bayi"]', value: 'ÇETAŞ İZMİR' }
+            ];
+
+            selections.forEach(item => {
+                let dropdown = iframe.querySelector(item.selector);
+                if (dropdown) {
+                    dropdown.value = item.value;
+                    dropdown.dispatchEvent(new Event('change'));
+                }
+            });
+        }, 3000);
+    </script>
 </body>
 </html>
